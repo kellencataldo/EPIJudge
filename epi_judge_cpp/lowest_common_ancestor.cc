@@ -6,11 +6,51 @@
 #include "test_framework/test_failure.h"
 #include "test_framework/timed_executor.h"
 using std::unique_ptr;
-BinaryTreeNode<int>* Lca(const unique_ptr<BinaryTreeNode<int>>& tree,
-                         const unique_ptr<BinaryTreeNode<int>>& node0,
-                         const unique_ptr<BinaryTreeNode<int>>& node1) {
-  // TODO - you fill in here.
-  return nullptr;
+
+struct SR {
+
+  SR() : LFound(false), RFound(false), LCA(NULL) { }
+  bool LFound;
+  bool RFound;
+  BinaryTreeNode<int>* LCA;
+
+};
+
+
+SR findLCA(const unique_ptr<BinaryTreeNode<int>>& tree, const unique_ptr<BinaryTreeNode<int>>& node0, const unique_ptr<BinaryTreeNode<int>>& node1) {
+
+  if (tree == NULL) {
+    return SR();
+  }
+
+  SR result = SR();
+  if (tree->data == node0->data) {
+    result.LFound = true;
+  }
+  if (tree->data == node1->data) {
+    result.RFound = true;
+  }
+  
+  SR ls = findLCA(tree->left, node0, node1);
+  SR rs = findLCA(tree->right, node0, node1);
+  result.LFound = result.LFound || ls.LFound || rs.LFound;
+  result.RFound = result.RFound || ls.RFound || rs.RFound;
+
+  if (ls.LCA != NULL) {
+    result.LCA = ls.LCA;
+  } else if (rs.LCA != NULL) {
+    result.LCA = rs.LCA;
+  }
+  else if (result.LFound && result.RFound) {
+    result.LCA = tree.get();
+  }
+
+  return result;
+}
+
+BinaryTreeNode<int>* Lca(const unique_ptr<BinaryTreeNode<int>>& tree, const unique_ptr<BinaryTreeNode<int>>& node0, const unique_ptr<BinaryTreeNode<int>>& node1) {
+  SR result = findLCA(tree, node0, node1);
+  return result.LCA;
 }
 int LcaWrapper(TimedExecutor& executor,
                const unique_ptr<BinaryTreeNode<int>>& tree, int key0,

@@ -6,9 +6,22 @@
 using std::unique_ptr;
 using std::vector;
 
+
+void traversePostOrder(const unique_ptr<BinaryTreeNode<int>>& tree, vector<int>& results) {
+	if (NULL == tree) {
+		return;
+	}
+
+	traversePostOrder(tree->left, results);
+	traversePostOrder(tree->right, results);
+	results.push_back(tree->data);
+}
+
 vector<int> PostorderTraversal(const unique_ptr<BinaryTreeNode<int>>& tree) {
-  // TODO - you fill in here.
-  return {};
+
+	vector<int> results;
+	traversePostOrder(tree, results);
+	return results;
 }
 
 int main(int argc, char* argv[]) {

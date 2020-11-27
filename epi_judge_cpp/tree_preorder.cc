@@ -4,9 +4,24 @@
 #include "test_framework/generic_test.h"
 using std::vector;
 
+
+void traversePreOrder(const unique_ptr<BinaryTreeNode<int>>& tree, vector<int>& results) {
+	
+	if (NULL == tree) {
+		return;
+	}
+
+	results.push_back(tree->data);
+	traversePreOrder(tree->left, results);
+	traversePreOrder(tree->right, results);
+}
+
+
 vector<int> PreorderTraversal(const unique_ptr<BinaryTreeNode<int>>& tree) {
-  // TODO - you fill in here.
-  return {};
+
+	vector<int> results;
+	traversePreOrder(tree, results);
+	return results;
 }
 
 int main(int argc, char* argv[]) {

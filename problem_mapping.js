@@ -1100,7 +1100,7 @@ problem_mapping = {
         },
         "9.08 Compute the kth node in an inorder traversal": {
             "C++: kth_node_in_tree.cc": {
-                "passed": 0,
+                "passed": 3851,
                 "total": 3851
             },
             "Java: KthNodeInTree.java": {
@@ -1114,7 +1114,7 @@ problem_mapping = {
         },
         "9.09 Compute the successor": {
             "C++: successor_in_tree.cc": {
-                "passed": 0,
+                "passed": 948,
                 "total": 948
             },
             "Java: SuccessorInTree.java": {

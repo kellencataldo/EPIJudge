@@ -1,12 +1,15 @@
 #include <istream>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "test_framework/generic_test.h"
 #include "test_framework/serialization_traits.h"
 #include "test_framework/test_failure.h"
 #include "test_framework/timed_executor.h"
 using std::vector;
+using std::cout;
+using std::endl;
 enum class Color { kWhite, kBlack };
 struct Coordinate {
   bool operator==(const Coordinate& that) const {
@@ -15,10 +18,39 @@ struct Coordinate {
 
   int x, y;
 };
-vector<Coordinate> SearchMaze(vector<vector<Color>> maze, const Coordinate& s,
-                              const Coordinate& e) {
-  // TODO - you fill in here.
-  return {};
+
+
+bool populateMazePath(vector<vector<Color>>& maze, const Coordinate& s, const Coordinate& e, vector<Coordinate>& mazeVec) {
+
+
+	if (s.x >= maze.size() || s.x < 0 || s.y >= maze.at(s.x).size() || s.y < 0 || maze[s.x][s.y] == Color::kBlack) {
+		return false;
+	}
+
+	maze[s.x][s.y] = Color::kBlack;
+	mazeVec.push_back(s);
+
+	if (s == e) {
+		return true;
+	}
+
+	for (auto& nextCoord : { Coordinate{s.x + 1, s.y}, Coordinate{s.x - 1, s.y}, Coordinate{s.x, s.y + 1 }, Coordinate{s.x, s.y - 1} }) { 
+
+		if (populateMazePath(maze, nextCoord, e, mazeVec)) {
+			return true;
+		}
+	}
+
+	mazeVec.pop_back();
+	return false;
+}
+
+
+vector<Coordinate> SearchMaze(vector<vector<Color>> maze, const Coordinate& s, const Coordinate& e) {
+
+	vector<Coordinate> mazeVec;
+	populateMazePath(maze, s, e, mazeVec);
+	return mazeVec;
 }
 
 namespace test_framework {

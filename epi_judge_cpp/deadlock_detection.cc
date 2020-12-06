@@ -1,18 +1,50 @@
 #include <stdexcept>
 #include <vector>
+#include <stack>
+
 
 #include "test_framework/generic_test.h"
 #include "test_framework/serialization_traits.h"
 #include "test_framework/timed_executor.h"
 using std::vector;
+using std::stack;
 
 struct GraphVertex {
   vector<GraphVertex*> edges;
+  enum Color {WHITE, GREY, BLACK};
+  Color color = WHITE;
 };
 
-bool IsDeadlocked(vector<GraphVertex>* graph) {
-  // TODO - you fill in here.
+bool DFS(GraphVertex& graph) {
+  if (graph.color == GraphVertex::GREY) {
+    return false;
+  }
+  else if (graph.color == GraphVertex::BLACK) {
+    return true;
+  }
+
+  graph.color = GraphVertex::GREY;
+
+  for (auto nextGraph: graph.edges) {
+    if (!DFS(*nextGraph)) {
+      return false;
+    }
+  }
+
+  graph.color = GraphVertex::BLACK;
   return true;
+}
+
+bool IsDeadlocked(vector<GraphVertex>* graph) {
+
+  vector<GraphVertex>& g = *graph;
+  for (auto& vertex: g) {
+    if (!DFS(vertex)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 struct Edge {
   int from;

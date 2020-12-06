@@ -2,6 +2,8 @@
     "cmake.sourceDirectory": "${workspaceFolder}/epi_judge_cpp",
     "files.associations": {
         "memory": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "queue": "cpp",
+        "vector": "cpp"
     }
 }

@@ -2,6 +2,7 @@
 #include <queue>
 #include <unordered_set>
 #include <vector>
+#include <unordered_map>
 
 #include "test_framework/generic_test.h"
 #include "test_framework/serialization_traits.h"
@@ -9,6 +10,7 @@
 using std::queue;
 using std::unordered_set;
 using std::vector;
+using std::unordered_map;
 
 struct GraphVertex {
   int label;
@@ -16,8 +18,31 @@ struct GraphVertex {
 };
 
 GraphVertex* CloneGraph(GraphVertex* graph) {
-  // TODO - you fill in here.
-  return new GraphVertex{0};
+  if (NULL == graph) {
+    return graph;
+  }
+
+  unordered_map<GraphVertex*, GraphVertex*> nodeMap;
+  nodeMap[graph] = new GraphVertex{graph->label, vector<GraphVertex*>()};
+  queue<GraphVertex*> q;
+  q.push(graph);
+
+  while (!q.empty()) {
+    GraphVertex* next = q.front();
+    q.pop();
+
+    GraphVertex* cloned = nodeMap[next];
+    for (GraphVertex* neighbor: next->edges) {
+      if (0 == nodeMap.count(neighbor)) {
+        nodeMap[neighbor] = new GraphVertex{neighbor->label, vector<GraphVertex*>()};
+        q.push(neighbor);
+      }
+
+      cloned->edges.push_back(nodeMap[neighbor]);
+    }
+  }
+
+  return nodeMap[graph];
 }
 vector<int> CopyLabels(const vector<GraphVertex*>& edges) {
   vector<int> labels;
